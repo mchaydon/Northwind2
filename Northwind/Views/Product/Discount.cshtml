@@ -1,0 +1,24 @@
+﻿@using Northwind.Models
+@model IEnumerable<Discount>
+@{
+    ViewBag.Title = "All Discounts";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<ul class="list-group">
+    @foreach (Discount d in @Model)
+    {
+        <li class="list-group-item">
+            <p class="font-md">@d.Title</p>
+            <p>
+                @d.Description
+            </p>
+            <p><i>Discount Expires: @string.Format("{0:MM/dd/yyyy}", @d.EndTime)</i></p>
+            <a class="special" data-container="body" data-toggle="popover" data-placement="right" data-content="@d.Code">
+                <i class="fa fa-hand-o-right"></i> Discount Code
+            </a>
+        </li>
+    }
+</ul>
+

@@ -1,0 +1,207 @@
+﻿@using Northwind.Models
+@model IEnumerable<Product>
+@{
+    ViewBag.Title = "Product";
+    int CustomerID = Request.IsAuthenticated ? Convert.ToInt32(User.Identity.Name) : -1;
+}
+
+@*@<div id="alert-search" class="alert alert-info alert-dismissable fade in"
+     style="position:fixed;">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong id="alert-search-msg">Your request produced @Model.Count() results</strong>
+</div>*@
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th>@ViewBag.Filter</th>
+            <th class="text-right">
+                Price
+            </th>
+            <th class="text-right">
+                Stock
+            </th>
+        </tr>
+    </thead>
+    <tbody id="products">
+        @foreach (Product p in Model)
+        {
+            <tr class="product-row" id="@p.ProductID">
+                <td><span id="name_@p.ProductID">@p.ProductName</span> (@p.QuantityPerUnit)</td>
+                <td class="text-right">
+                    $<span id="price_@p.ProductID">@string.Format("{0:n2}", p.UnitPrice)</span>
+                </td>
+                <td class="text-right">@p.UnitsInStock</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="font-md">
+    <a href="~/Product/Category"><i class="fa fa-list"></i> Product Categories</a>
+</div>
+
+<!-- Footer -->
+<nav id="nav-footer" class="navbar-default navbar-fixed-bottom">
+    <div class="container font-md">
+        Minimum Price: $<span id="minPrice">0</span>
+        <a id="down" data-val="-5"><i class="fa fa-chevron-circle-down"></i></a>
+        <a id="up" data-val="5"><i class="fa fa-chevron-circle-up"></i></a>
+        <div id="modelCountDisplay" class="pull-right">
+            0 products
+        </div>
+    </div>
+</nav> 
+
+<!-- Modal window -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add to Cart?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-5"><strong>Product</strong></div>
+                    <div class="col-xs-2"><strong>Price</strong></div>
+                    <div class="col-xs-2"><strong>Quantity</strong></div>
+                    <div class="col-xs-3 text-right"><strong>Total</strong></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-5 pad-top" id="ProductName">Cool Product</div>
+                    <div class="col-xs-2 pad-top">
+                        $<span id="UnitPrice">15.00</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <input type="number" min="1" value="1" id="Quantity" class="form-control" />
+                    </div>
+                    <div class="col-xs-3 pad-top text-right">
+                        $<span id="Total">15.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="AddToCart">
+                    Continue
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<input type="hidden" id="id" value="@ViewBag.id" />
+<input type="hidden" id="SearchString" value="@ViewBag.SearchString" />
+
+<link href="~/Content/jBox.css" rel="stylesheet">
+
+@section scripts
+{   
+    <script src="~/Scripts/jBox.min.js"></script>
+    <script>
+        $(function () {
+            showModelCount(@Model.Count());
+            //setTimeout(function () { $('.alert').fadeOut(); }, 3000);
+            //$('.product-row').click(function () {
+            //    alert(this.id);
+            // });
+        });
+        // update total when cart quantity is changed
+        $('#Quantity').change(function () {
+            var total = parseInt($(this).val()) * parseFloat($('#UnitPrice').html());
+            $('#Total').html(numberWithCommas(total.toFixed(2)));
+        });
+        // function to display commas in number
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function showModelCount(modelCount) {
+            $('#modelCountDisplay').html(modelCount + " products");
+        }
+
+        // attach event listener to modal window's update button
+        $('#AddToCart').click(function () {
+            $('#AddToCart').click(function(){
+             // hide modal
+             $('#myModal').modal('hide');
+                // AJAX POST Request
+             var URL = "@Url.Content("~")Cart/AddToCart";
+             $.post( URL, { ProductID: ProductID, CustomerID: @CustomerID, Quantity:
+             $('#Quantity').val() })
+              .always(function( data, textStatus, statusObject ) {
+                  if(statusObject.status == 200){
+                      // success
+                      console.log($('#name_' + ProductID).html() + ' added to cart')
+                  } else {
+                      // error
+                      console.log("Http response code: " + data.status);
+                      console.log("Http response: " + data.statusText);
+                      12
+                  }
+              });
+            });
+        });
+
+        // global variable to store selected ProductID
+        var ProductID;
+
+        // product-row is clicked
+        $('#products').on('click', '.product-row', function () {
+            // handle error if customer is not authenticated
+            if(@CustomerID == -1){
+                // display error
+                new jBox('Notice', { content: 'Sign in to access your cart'});
+            } else {
+                // show modal window
+                ProductID = this.id;
+                // display selected product's name & price in modal
+                $('#ProductName').html($('#name_' + ProductID).html());
+                $('#UnitPrice').html($('#price_' + ProductID).html());
+                // set product quantity = 1
+                $('#Quantity').val(1);
+                // calculate and display total in modal
+                $('#Quantity').change();
+                // display modal
+                $('#myModal').modal();
+            }
+        });
+
+        $('#up, #down').click(function () {
+            var minPrice = parseInt($('#minPrice').html()) + parseInt($(this).data("val"));
+            if (minPrice >= 0 && minPrice <= 100) {
+                $('#minPrice').html(minPrice);
+                var id = $('#id').val() ? "/" + $('#id').val() : "";
+                var str = $('#str').val() ? "&SearchString=" + $('#str').val() : "";
+                var URL = "@Url.Content("~")Product/FilterProducts" + id + "?PriceFilter=" + minPrice + str;
+                $.getJSON(URL)
+                .always(function (data, textStatus, statusObject) {
+                    if (statusObject.status == 200) {
+                        // 200 OK
+                        $('#products').html('');
+                        for (i = 0; i < data.length; i++) {
+                            var id = data[i].ProductID;
+                            var str = "<tr class='product-row' id='" + id + "'>";
+                            str += "<td><span id='name_" + id + "'>" + data[i].ProductName + "</span> (" +
+                            data[i].QuantityPerUnit + ")</td>";
+                            str += "<td class='text-right'>$<span id='price_" + id + "'>" +
+                            data[i].UnitPrice.toFixed(2) + "</span></td>";
+                            str += "<td class='text-right'>" + data[i].UnitsInStock + "</td>";
+                            str += "</tr>";
+                            $('#products').append(str);
+                        }
+                        showModelCount(data.length);
+                    } else {
+                        // Error
+                        console.log("Http response code: " + data.status);
+                        console.log("Http response: " + data.statusText);
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,100 @@
+﻿@using Northwind.Models
+@model IEnumerable<Cart>
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<h2>Cart</h2>
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th>Product Description</th>
+            <th class="text-right">Quantity</th>
+            <th class="text-right">Price</th>
+            <th class="text-right">Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="products">
+        @foreach (Cart c in Model)
+        {
+            <tr class="product-row" id="@c.ProductID">
+                @*Product Name*@
+                <td><span id="name_@c.ProductID">@c.Product.ProductName</span></td>
+                @*Quantity*@
+                <td class="text-right"><input class="qty Quantity" type="number" name="@c.ProductID" id="@c.ProductID" value="@c.Quantity" min="0" max="@c.Product.UnitsInStock" /></td>
+                @*Price*@
+                <td class="text-right"><span id="price_@c.ProductID">@string.Format("{0:n2}", c.Product.UnitPrice)</span></td>
+                @*Total*@
+                <td class="text-right"><span id="total_@c.ProductID">@string.Format("{0:n2}", c.Product.UnitPrice * @c.Quantity)</span></td>
+                @*Remove Item*@
+                <td class="text-right remove" name="@c.ProductID"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p><a href="~/Cart/SubmitOrder" id="submit" class="btn btn-primary btn-lg">Submit</a></p>
+
+@section scripts
+{
+    <script>
+        $(function (e) {
+
+            $('.remove').click(function (e) {
+                var ProductID = $(this).attr('name');
+                var CustomerID = 1;
+
+                var URL = "@Url.Content("~")Cart/RemoveFromCart";
+                $.post(URL, {
+                    ProductID: ProductID, CustomerID: CustomerID
+                })
+                 .always(function( data, textStatus, statusObject ) {
+                     if(statusObject.status == 200){
+                         // success
+                         console.log($('#name_' + ProductID).html() + ' removed from cart')
+                     } else {
+                         // error
+                         console.log("Http response code: " + data.status);
+                         console.log("Http response: " + data.statusText);
+                         12
+                     }
+                 });
+            });
+
+            $('.qty').change(function (e) {
+                var ProductID = $(this).attr('name');
+                var CustomerID = 1;
+                var qty = Number($(this).val());
+                var price = Number($('#price_' + this.id).html());
+                $('#total_' + this.id).html((qty * price).toFixed(2));
+
+                var total = 0;
+                $('.qty').each(function (e) {
+                    total += Number($('#total_' + this.id).html());
+                });
+                $('#total_' + this.id).html(total.toFixed(2));
+
+                var URL = "@Url.Content("~")Cart/UpdateCartQuantity";
+                $.post(URL, {
+                    ProductID: ProductID, CustomerID: CustomerID, Quantity: qty
+                })
+                 .always(function( data, textStatus, statusObject ) {
+                     if(statusObject.status == 200){
+                         // success
+                         console.log($('#name_' + ProductID).html() + ' qty updated')
+                     } else {
+                         // error
+                         console.log("Http response code: " + data.status);
+                         console.log("Http response: " + data.statusText);
+                         12
+                     }
+                 });
+            });
+        });
+    </script>
+}

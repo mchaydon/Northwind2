@@ -1,0 +1,40 @@
+﻿@model Northwind.Models.CustomerSignIn
+@{
+    ViewBag.Title = "Sign In";
+}
+<div class="font-md">Customer Sign In</div>
+<div class="well">
+    <form method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <!-- CompanyName List -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomerId, "Company Name", htmlAttributes: new { @class = "control-label col-md-2"})
+            <div class="col-md-10">
+            @Html.DropDownList("CustomerID", null, htmlAttributes: new {@class = "form-control signin - form" })
+            </div>
+        </div>
+        <!-- Password -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, "Password", htmlAttributes: new { @class ="control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Enter Password"})
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Submit button -->
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-default">Sign In</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="font-md">
+    <a href="~/Home/Index"><i class="fa fa-home"></i> Home</a>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

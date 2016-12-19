@@ -1,0 +1,67 @@
+﻿@using Northwind.Models
+@model IEnumerable<Discount>
+@{
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron">
+    <h1>N<i class="fa fa-compass"></i>rthwind</h1>
+    <p class="lead">
+        We have the best prices and selection of high quality foods & beverages on the
+        Planet. Check out our featured discounts below.
+    </p>
+    <p><a href="#" class="btn btn-danger btn-lg">Place your order now &raquo;</a></p>
+</div>
+<div class="row">
+    @foreach (Discount d in @Model)
+    {
+        <div class="col-sm-4">
+            <h2 class="font-md">@d.Title</h2>
+            <hr class="hr-special" />
+            <p>
+                @d.Description
+            </p>
+            <p><i>Discount Expires: @string.Format("{0:MM/dd/yyyy}", @d.EndTime)</i></p>
+            <a class="special" data-container="body" data-toggle="popover" data-placement="right" data-content="@d.Code">
+                <i class="fa fa-hand-o-right"></i> Discount Code
+            </a>
+        </div>
+    }
+</div>
+<div class="row">
+    <hr class="hr-special" />
+    <div class="col-sm-4" style="padding-top: 2em">
+        <a href="~/Product/Discount" class="font-lg"><i class="fa fa-tag" aria-hidden="true"> See all discounts</i></a>
+    </div>
+</div>
+
+@*<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div>*@
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+    </script>
+}

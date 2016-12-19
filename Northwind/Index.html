@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Northwind</title>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <!-- bootstrap stylesheet -->
+    <link href="Content/foundation.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <style>
+        .special{
+            cursor:pointer;
+        }
+        .special:hover{
+            text-decoration:none;
+            color: #000;
+        }
+        .hr-special {
+            margin: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand"><i class="fa fa-home"></i>&nbsp;Home</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-database"></i>&nbsp;Products&nbsp;<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-list"></i>&nbsp;Browse Categories</a></li>
+                            <li><a href="#" id="search"><i class="fa fa-search"></i>&nbsp;Product Search</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#"><i class="fa fa-tag"></i>&nbsp;Current Discounts</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-users"></i>&nbsp;Customers <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-sign-in"></i>&nbsp;Sign In</a></li>
+                            <li><a href="#"><i class="fa fa-user-plus"></i>&nbsp;Register</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#"><i class="fa fa-user"></i>&nbsp;Your Account</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left hidden-xs" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="SearchString" id="SearchString" placeholder="Product Search">
+                    </div>
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><i class="fa fa-sign-out"></i>&nbsp;Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content" style="margin-top:75px;margin-bottom:25px;">
+        <div class="jumbotron" style="border: 1px solid rgba(0,0,0,0.4);">
+            <h1 style="text-shadow: 2px 2px 0 rgba(255,255,255,0.7), 3px 3px 4px rgba(0,0,0,0.6);">N<i class="fa fa-compass" style="font-size:70%;"></i>rthwind</h1>
+            <p class="lead">
+                We have the best prices and selection of high quality foods & beverages on the planet!
+                Check out our featured discounts below!
+            </p>
+            <p><a href="#" class="btn btn-primary btn-lg">Place your order now &raquo;</a></p>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <h2 class="font-md">Tis the Seasoning</h2>
+                <hr class="hr-special" />
+                <p>
+                    Order today! Save 12.5% on Chef Anton&#39;s Italian Seasoning. You don&#39;t want to make Chef Anton mad, do you?
+                </p>
+                <p><i>Discount Expires: 12/14/2016</i></p>
+                <a class="special" data-container="body" data-toggle="popover" data-placement="right" data-content="4444">
+                    <i class="fa fa-hand-o-right"></i> Discount Code
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <h2 class="font-md">Go Green</h2>
+                <hr class="hr-special" />
+                <p>
+                    Genen Shouyu goes on sale very rarely. Order now to save 10% off our already low price.
+                </p>
+                <p><i>Discount Expires: 12/14/2016</i></p>
+                <a class="special" data-container="body" data-toggle="popover" data-placement="right" data-content="1515">
+                    <i class="fa fa-hand-o-right"></i> Discount Code
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <h2 class="font-md">Half Price</h2>
+                <hr class="hr-special" />
+                <p>
+                    Just because you can&#39;t pronounce &quot;Schoggi Schokolade&quot; doesn&#39;t mean you shouldn&#39;t buy it. Get it now for 50% off!
+                </p>
+                <p><i>Discount Expires: 12/14/2016</i></p>
+                <a class="special" data-container="body" data-toggle="popover" data-placement="right" data-content="2727">
+                    <i class="fa fa-hand-o-right"></i> Discount Code
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- jquery & bootstrap frameworks -->
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/foundation.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+</body>
+</html>
